@@ -9,6 +9,7 @@
 ///////////////////////////////////
 // copy the Design Tool code here
 ///////////////////////////////////
+// Declare directories, libraries, files you're referring to
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -18,6 +19,7 @@
 // GUItool: begin automatically generated code
 AudioInputI2S            i2s2;           //xy=314,265.1999969482422
 AudioOutputI2S           i2s1;           //xy=555,226.1999969482422
+// Two peaks for left and right
 AudioAnalyzePeak         peak1;          //xy=567,300
 AudioAnalyzePeak         peak2;          //xy=612,373.1999969482422
 AudioConnection          patchCord1(i2s2, 0, i2s1, 0);
@@ -31,6 +33,7 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=308.00000762939453,370.00000572204
 
 
 // Use these with the Teensy Audio Shield
+// Declare constants
 #define SDCARD_CS_PIN    10
 #define SDCARD_MOSI_PIN  7
 #define SDCARD_SCK_PIN   14
@@ -59,19 +62,19 @@ void setup() {
     }
   }
 
-  AudioMemory(8);
-  sgtl5000_1.enable();
-  sgtl5000_1.volume(0.5);
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
+  // Setting mic sensitivity
   sgtl5000_1.micGain(36);
   delay(1000);
 }
 
 // for best effect make your terminal/monitor a minimum of 62 chars wide and as high as you can.
 
+// Declare variable of type elaspedMillis, that automatically increases
 elapsedMillis msecs;
 
 void loop() {
+  // Tutorial was playing music from the SD card. We want the input to be the microphone
 //  if (playSdWav1.isPlaying() == false) {
 //    Serial.println("Start playing");
 //    //playSdWav1.play("SDTEST1.WAV");
@@ -81,11 +84,14 @@ void loop() {
 //    delay(10); // wait for library to parse WAV info
 //  }
   
+  // 40 for sampling rate, every 40 milliseconds
   if (msecs > 40) {
     if (peak1.available() && peak2.available()) {
+      // Resets stopwatch
       msecs = 0;
       float leftNumber = peak1.read();
       float rightNumber = peak2.read();
+      // Scales peak by 30 for width of monitor
       int leftPeak = leftNumber * 30.0;
       int rightPeak = rightNumber * 30.0;
       int count;

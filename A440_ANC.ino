@@ -1,4 +1,3 @@
-
 ///////////////////////////////////
 // copy the Design Tool code here
 ///////////////////////////////////
@@ -25,31 +24,35 @@ AudioControlSGTL5000     sgtl5000_1;     //xy=374.00000762939453,406.00000381469
 // GUItool: end automatically generated code
 
 
-
-
 void setup() {
   Serial.begin(9600);
+  AudioMemory(10);
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.5);
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
-  sgtl5000_1.micGain(36);
+  sgtl5000_1.micGain(46);
   delay(1000);
 
+  tone1.frequency(440, 4);
+  tone2.frequency(440, 4);
   //set initial frequency to A440 for testing purposes
   sine1.frequency(440);
   sine1.amplitude(0.5);
+
+   Serial.println("hello world");
 }
 
 //global vars
 elapsedMillis msecs;
 float targetVolume = 0.2; //target volume of mixed signal (input+ANC)
+float inputVolume = 0;
 
 void loop() { 
   if (msecs > 40) {   //IMPORTANT - what sampling rate is needed/possible? order of microseconds?
     //VOLUME ALIGNMENT
     if (tone1.available()) {
       msecs = 0;
-      float inputVolume = tone1.read();
+      inputVolume = tone1.read();
       //match output volume to input volume
       sine1.amplitude(inputVolume);
 
@@ -59,11 +62,10 @@ void loop() {
     //PHASE ALIGNMENT
     if (tone2.available()) {
       float mixedVolume = tone2.read();
-      if (mixedVolume > targetVolume) { //continuosly restart the sine wave until a cancelling phase is hit
+      if (mixedVolume > 0.5*inputVolume) { //continuosly restart the sine wave until a cancelling phase is hit
         sine1.phase(0);
       }
-      Serial.print(mixedVolume);
+      Serial.println(mixedVolume);
     }
   }
-  Serial.println();
 }

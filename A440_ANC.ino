@@ -23,6 +23,15 @@ AudioConnection          patchCord6(mixer1, tone2);
 AudioControlSGTL5000     sgtl5000_1;     //xy=374.00000762939453,406.00000381469727
 // GUItool: end automatically generated code
 
+//global vars
+elapsedMillis msecs;
+float inputVolume = 0;
+float mixedVolume;
+float amptemp;
+float amp;
+float freq;
+float period;
+float samplePeriod;
 
 void setup() {
   Serial.begin(9600);
@@ -30,40 +39,54 @@ void setup() {
   sgtl5000_1.enable();
   sgtl5000_1.volume(0.5);
   sgtl5000_1.inputSelect(AUDIO_INPUT_MIC);
-  sgtl5000_1.micGain(46);
+  sgtl5000_1.micGain(40);
   delay(1000);
 
-  tone1.frequency(440, 4);
-  tone2.frequency(440, 4);
+  freq = 440;
+  tone1.frequency(freq, 4);
+  tone2.frequency(freq, 4);
   //set initial frequency to A440 for testing purposes
-  sine1.frequency(440);
+  sine1.frequency(freq);
   sine1.amplitude(0.5);
 
    Serial.println("hello world");
+    period = 1/(freq/1000);
+  Serial.print("period: ");
+  Serial.println(period);
+
+  amp = analogRead(A1);
 }
 
-//global vars
-elapsedMillis msecs;
-float targetVolume = 0.2; //target volume of mixed signal (input+ANC)
-float inputVolume = 0;
 
 void loop() { 
-  if (msecs > 40) {   //IMPORTANT - what sampling rate is needed/possible? order of microseconds?
+  samplePeriod = period/2;
+  if (msecs > samplePeriod) {   //IMPORTANT - what sampling rate is needed/possible? order of microseconds?
     //VOLUME ALIGNMENT
     if (tone1.available()) {
       msecs = 0;
       inputVolume = tone1.read();
+    
       //match output volume to input volume
-      sine1.amplitude(inputVolume);
+      //sine1.amplitude(inputVolume);
+      amptemp = analogRead(A1)*0.00185;
+  
+    if (amptemp > amp + 0.05 || amptemp < amp - 0.05){
+      amp = amptemp;
+      sine1.amplitude(amp);
+    }
+     //Serial.println(amp);
+
 
       Serial.print(inputVolume); //test1
       Serial.print("  ");
     }
+    
     //PHASE ALIGNMENT
     if (tone2.available()) {
-      float mixedVolume = tone2.read();
-      if (mixedVolume > 0.5*inputVolume) { //continuosly restart the sine wave until a cancelling phase is hit
+      mixedVolume = tone2.read();
+      if (mixedVolume > 0.2*inputVolume) { //continuosly restart the sine wave until a cancelling phase is hit
         sine1.phase(0);
+        Serial.print("Change  ");
       }
       Serial.println(mixedVolume);
     }

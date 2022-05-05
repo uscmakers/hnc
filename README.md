@@ -6,7 +6,7 @@ Final Code: SD_Theoretical.ino
 Hardware/Electronics Requirements:
 - Teensy 4.0
 - Audio Shield for Teensy 4.0
-- Potentiometer (to select a frequency to cancel)
+- Potentiometer (to select an audio file to play and cancel out)
 - Headphones
 
 Software Requirements:

@@ -1,7 +1,7 @@
 # hnc
 Our HNC (Hyperactive Noise Cancellation) technology can be implemented on any pair of headphones and will be able to selectively cancel out sine waves of different frequencies.
 
-Final Code: SD_Theoretical.ino
+Final Code: HNC_Final.ino
 
 Hardware/Electronics Requirements:
 - Teensy 4.0

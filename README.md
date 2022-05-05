@@ -10,7 +10,7 @@ Hardware/Electronics Requirements:
 - Headphones
 
 Software Requirements:
-- Arduino 
+- Arduino IDE
 - Teensyduino: https://www.pjrc.com/teensy/teensyduino.html
 - SD card to store audio files of sine waves/noise to be cancelled out
   - Code references the names of audio files in the stateChange function

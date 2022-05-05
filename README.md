@@ -1,12 +1,22 @@
 # hnc
-Hyperactive Noise Cancelling Headphones
+Our HNC (Hyperactive Noise Cancellation) technology can be implemented on any pair of headphones and will be able to selectively cancel out sine waves of different frequencies.
+
 Final Code: SD_Theoretical.ino
-Hardware Requirements:
+
+Hardware/Electronics Requirements:
 - Teensy 4.0
 - Audio Shield for Teensy 4.0
-- Potentiometer
+- Potentiometer (to select a frequency to cancel)
 - Headphones
+
 Software Requirements:
 - Arduino 
 - Teensyduino: https://www.pjrc.com/teensy/teensyduino.html
+- SD card to store audio files of sine waves/noise to be cancelled out
+  - Code references the names of audio files in the stateChange function
 
+Instructions:
+1. Solder Teensy onto Audio Shield
+2. Connect Potentiometer to Teensy (GND, VCC, A0/Pin14)
+3. Plug headphones into Audio Shield
+4. Upload code onto Teensy
